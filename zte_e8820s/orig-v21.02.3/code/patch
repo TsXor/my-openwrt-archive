@@ -1,0 +1,77 @@
+diff --git a/include/image.mk b/include/image.mk
+index b6e8ab3c84..73fc54a9ae 100644
+--- a/include/image.mk
++++ b/include/image.mk
+@@ -167,7 +167,8 @@ DTC_FLAGS += \
+   -Wno-unique_unit_address
+ 
+ define Image/pad-to
+-	dd if=$(1) of=$(1).new bs=$(2) conv=sync
++	#dd if=$(1) of=$(1).new bs=$(2) conv=sync
++	dd if=$(1) of=$(1).new conv=sync && echo $(2)
+ 	mv $(1).new $(1)
+ endef
+ 
+diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
+index 8ee2a020bb..2084bfabda 100644
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -1637,6 +1637,24 @@ define Device/zio_freezio
+ endef
+ TARGET_DEVICES += zio_freezio
+ 
++define Device/zte_e8820s
++  $(Device/dsa-migration)
++  $(Device/uimage-lzma-loader)
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  KERNEL_SIZE := 4096k
++  UBINIZE_OPTS := -E 5
++  IMAGE_SIZE := 130304k
++  IMAGES += factory.bin
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
++	check-size
++  DEVICE_VENDOR := ZTE
++  DEVICE_MODEL := E8820S
++  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3
++endef
++TARGET_DEVICES += zte_e8820s
++
+ define Device/zyxel_nr7101
+   $(Device/dsa-migration)
+   BLOCKSIZE := 128k
+@@ -1666,3 +1684,4 @@ define Device/zyxel_wap6805
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+ endef
+ TARGET_DEVICES += zyxel_wap6805
++
+diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds b/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
+index 95cf120f2d..9e59e6ce97 100755
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
+@@ -115,6 +115,10 @@ xiaomi,redmi-router-ac2100)
+ youhua,wr1200js)
+ 	ucidef_set_led_netdev "internet" "INTERNET" "green:wan" "wan"
+ 	;;
++zte,e8820s)
++	ucidef_set_led_netdev "sys" "SYS_LED" "white:sys" "eth0" "tx rx"
++	ucidef_set_led_timer "power" "POWER_LED" "white:sys" "100" "8000"
++	;;
+ esac
+ 
+ board_config_flush
+diff --git a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+index c2ad4d3ed6..f7d770defa 100755
+--- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+@@ -77,7 +77,8 @@ platform_do_upgrade() {
+ 	xiaomi,mi-router-3-pro|\
+ 	xiaomi,mi-router-4|\
+ 	xiaomi,mi-router-ac2100|\
+-	xiaomi,redmi-router-ac2100)
++	xiaomi,redmi-router-ac2100|\
++	zte,e8820s)
+ 		nand_do_upgrade "$1"
+ 		;;
+ 	iodata,wn-ax1167gr2|\
