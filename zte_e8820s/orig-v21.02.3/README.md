@@ -1,6 +1,6 @@
 ## 本仓库同时提供内核模块软件源，所以你不用自己编译来加插件。科学上网推荐V2rayA，易于配置，安装方式详见[此文档](https://github.com/v2rayA/v2raya-openwrt/blob/master/README.zh-cn.md)
 ### 注：本补丁是依据https://github.com/siwind/openwrt 修改v21.02.3源码得到的，首先内容不是我原创的，其次只适用于官方openwrt v21.02.3的源码，各路大神的仓库大概率打不上此补丁 ;)  做这个补丁是为了给不熟悉编译的同志降低操作难度。
-### 此补丁会同时将你的编译配置覆盖为官方配置，编译时会同时生成所有内核模块的ipk（大小一共25M左右），关于内核模块和插件，请看这一篇：（还没写，233）
+### 此补丁会同时将你的编译配置覆盖为官方配置，编译时会同时生成所有内核模块的ipk（大小一共25M左右），关于内核模块和插件，请看这一篇：[kmod软件包，内核版本与编译的关系](https://github.com/TsXor/my-openwrt-archive/blob/master/post/kmod%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%8C%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%E4%B8%8E%E7%BC%96%E8%AF%91%E7%9A%84%E5%85%B3%E7%B3%BB.md)
 ### 附带的配置同时设置了默认使用wpad-openssl和luci-dashboard，这两个设置都可以省很多事
 ## 使用方法  
 ### 1-3步适用于大部分linux发行版  
