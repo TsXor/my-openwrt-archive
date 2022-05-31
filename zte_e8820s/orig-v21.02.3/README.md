@@ -10,6 +10,7 @@
 #### 1.clone openwrt原仓库  
     git clone https://github.com/openwrt/openwrt.git
     cd openwrt
+    git checkout v21.02.3
 #### 2.下载E8820S补丁并解压  
     wget https://raw.githubusercontent.com/TsXor/my-openwrt-archive/master/zte_e8820s/orig-v21.02.3/code.tar.gz
     tar -zxvf code.tar.gz
